@@ -5,11 +5,26 @@
     <link rel="stylesheet" type="text/css" href="css/index.css" />
   </head>
   <body>
-    <ul id="message-list"></ul>
-    <div id="users-typing"></div>
-    <form id="chat-box" action="">
-      <input id="message" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="chat">
+      <div id="header-container">
+        <div id="chat-header"> Chat Messages </div>
+        <div id="users-online-header"> Users Online </div>
+      </div>
+      <div id="chat-user-container">
+        <div id="chat-container">
+          <div id="message-container">
+            <ul id="message-list"></ul>
+            <div id="users-typing"></div>
+          </div>
+          <form id="send-container" action="">
+            <input id="message" autocomplete="off" /><button>Send</button>
+          </form>
+        </div>
+        <div id="users-online-container">
+          <ul id="users-online-list"></ul>
+        </div>
+      </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/chatpage.js" type="text/javascript"></script>
   </body>

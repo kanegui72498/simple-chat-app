@@ -18,15 +18,16 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   //On username creation inform all other connected sockets
   socket.on('user created', (user) => {
+    user.id = socket.id; //set the user id to socket id
     usersConnected[socket.id] = user; //every socket has unique id, set the username to array
-    socket.broadcast.emit('user connected', user.name)
+    io.emit('user connected', {user: user, usersConnected: usersConnected});
   })
 
   //On socket disconnect inform all other connected sockets
   socket.on('disconnect', () => {
     if(currentUser(socket.id)) { // check to see user exists
-      socket.broadcast.emit('user disconnected', currentUser(socket.id).name);
-      delete currentUser(socket.id); //remove the user from the list of connected users
+      socket.broadcast.emit('user disconnected', {user: currentUser(socket.id), usersConnected: usersConnected});
+      delete usersConnected[socket.id]; //remove the user from the list of connected users
       delete usersTyping[socket.id]; //user can no longer be typing if they are not connected
     }
   });
