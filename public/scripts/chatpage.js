@@ -1,27 +1,24 @@
-var socket = io();
-      
+const socket = io(); //initialize socket connection
+
 var sendContainer = document.getElementById('send-container');
 var message = document.getElementById('message');
 var messageList = document.getElementById('message-list');
 var usersTyping = document.getElementById('users-typing');
 var usersOnline = document.getElementById('users-online-list');
+let username = localStorage.getItem('username');
 
-//ask for username
-const username = prompt('Enter username:');
-
-//create user object
 let user = {
-    name: (username) ? username : 'Anonymous', //name is 'Anonymous' if nothing is inputted
-    id: '', 
+    name: username,
+    id: socket.id,
 }
 
-sendMessage('You joined.'); //show that you have connected to the chat
 socket.emit('user created', user);
 
 //create event listener for sending message
 sendContainer.addEventListener('submit', function(e) {
     e.preventDefault(); //prevents page from refreshing after sending message
     if (message.value) {
+        console.log('hello' + socket.id);
         socket.emit('chat message', message.value); //send message (as long as not empty) to the server
         sendMessage(`You: ${message.value}`) //show your own message
         message.value = ''; //empty out the message box
@@ -47,6 +44,8 @@ socket.on('user connected', (data) => {
     //send message that some user connected as long as its not the current one
     if(data.user.name !== user.name) {
         sendMessage(`${data.user.name} has connected.`);
+    } else {
+        sendMessage('You joined.'); //show that you have connected to the chat
     }
     displayUsersOnline(data.usersConnected);
 });

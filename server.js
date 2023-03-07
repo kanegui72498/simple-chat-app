@@ -8,18 +8,36 @@ const io = new Server(server);
 const usersConnected = {}; //create mapping for all users that are connected
 const usersTyping = {}; //create mapping for all users that are typing
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => {
+function indexController(req, res) {
+  console.log(req.body);
+  if(req.body.username) {
+    res.sendFile(__dirname + '/index.html');
+  } else {
+    res.sendFile(__dirname + '/create-username.html');
+  }
+}
+
+function createUserController(req, res){
   res.sendFile(__dirname + '/index.html');
+}
+
+app.get('/', indexController);
+
+app.get('/create-username', (req, res) => {
+  res.sendFile(__dirname + '/create-username.html');
 });
 
-//when user loads website create a socket
+app.post('/', createUserController);
+
+//when user connects retrieve their socket
 io.on('connection', (socket) => {
   //On username creation inform all other connected sockets
   socket.on('user created', (user) => {
     user.id = socket.id; //set the user id to socket id
-    usersConnected[socket.id] = user; //every socket has unique id, set the username to array
+    usersConnected[socket.id] = user; //every socket has unique id, set the user with it
     io.emit('user connected', {user: user, usersConnected: usersConnected});
   })
 
