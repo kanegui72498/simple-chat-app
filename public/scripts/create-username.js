@@ -3,6 +3,6 @@ var username = document.getElementById('username');
 
 usernameForm.addEventListener('submit', function(e) {
     //create user object
-    localStorage.setItem("username", username.value); //store the username in local storage so it can be accessed again if user refreshes
+    sessionStorage.setItem("username", username.value); //store the username in session storage so it can work accross multiple windows
 });
 
