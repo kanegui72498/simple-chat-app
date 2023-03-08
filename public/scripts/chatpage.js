@@ -5,6 +5,7 @@ var message = document.getElementById('message');
 var messageList = document.getElementById('message-list');
 var usersTyping = document.getElementById('users-typing');
 var usersOnline = document.getElementById('users-online-list');
+var messageContainer = document.getElementById('message-container');
 let username = sessionStorage.getItem('username');
 
 //map of valid commands and number of arguments they tank
@@ -44,6 +45,7 @@ sendContainer.addEventListener('submit', function(e) {
 
         socket.emit('chat message', message.value); //send message (as long as not empty) to the server to broadcast
         message.value = ''; 
+        messageContainer.scrollTop = messageContainer.scrollHeight; //scroll to bottom of messages after sending one
     }
 });
 
