@@ -13,7 +13,7 @@ validCommands.set('/whisper', 1);
 validCommands.set('/online', 0);
 validCommands.set('/whoami', 0);
 
-
+//create user object
 var user = {
     name: username,
     id: socket.id,
@@ -117,6 +117,7 @@ function receiveMessage(username, message, type) {
 
     messageText.innerHTML = message;
 
+    //if username is provided then initialize the tag
     if (username) { 
         usernameTag.innerHTML = username;
         messageToReceive.appendChild(usernameTag); 
@@ -137,6 +138,7 @@ function displayUsersTyping(users) {
         numUsersTyping--;
     } 
     
+    //determines the users and text to be displayed
     if(numUsersTyping == 1) {
         let username = (usernames[0] != user.name) ? usernames[0] : usernames[1]; //display the user that is not the current one
         usersTyping.innerText = `${username} is typing...`;

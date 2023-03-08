@@ -9,17 +9,19 @@ const usersConnected = {}; //create mapping for all users that are connected
 const usersTyping = {}; //create mapping for all users that are typing
 var anonUserCount = 0;
 
-app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 
+//route for chat page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+//route for create username page
 app.get('/create-username', (req, res) => {
   res.sendFile(__dirname + '/create-username.html');
 });
 
+//redirect to chat page after creating username
 app.post('/create-username', (req, res) => {
   res.redirect('/');
 });
@@ -116,7 +118,8 @@ function executeCommand(socket, fullString){
     }
 
     if(user) {
-      if(user.id === socket.id) { //user cannot private message themselves
+      //user cannot private message themselves
+      if(user.id === socket.id) {
         socket.emit('server message', 'You cannot whisper yourself.');
       } else {
         //show your own private message that you sent
@@ -125,6 +128,7 @@ function executeCommand(socket, fullString){
            message: message, 
            type: 'your-private-message'
         });
+        
         //send private message to user by id
         socket.to(user.id).emit('private message', {
           messageTag: `[<b>${currentUser(socket.id).name}</b> <i>whispered</i>]`, 
