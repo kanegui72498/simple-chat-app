@@ -1,0 +1,31 @@
+
+body { 
+    margin: 0; 
+    padding-bottom: 3rem; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+}
+
+h1 {
+    color: cornflowerblue;
+}
+
+#create-username-page {
+    display: flex;
+    background-color: lightblue;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+button { 
+    background: green; 
+    color: #fff; 
+}
+
+#chat-logo {
+    height: 40%;
+    width: 20%;
+}

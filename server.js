@@ -28,14 +28,16 @@ app.post('/create-username', (req, res) => {
 io.on('connection', (socket) => {
   //On username creation inform all other connected sockets
   socket.on('user created', (user) => {
-    //if username was not set then create and set one
-    if (!user.name) { 
-      user.name = `Anonymous${++anonUserCount}`;
-    }
     user.id = socket.id; //set the user id to socket id
     usersConnected[socket.id] = user; //every socket has unique id, set the user with it
     io.emit('user connected', {user: user, usersConnected: usersConnected});
   })
+
+  //create random user if username was not created
+  socket.on('create random username', () => {
+    generatedName = `Anonymous${++anonUserCount}`;
+    socket.emit('random username generated', generatedName);
+  });
 
   //On socket disconnect inform all other connected sockets
   socket.on('disconnect', () => {
@@ -118,9 +120,17 @@ function executeCommand(socket, fullString){
         socket.emit('server message', 'You cannot whisper yourself.');
       } else {
         //show your own private message that you sent
-        socket.emit('private message', {messageTag: `You whispered ${username}`, message: message});
+        socket.emit('private message', {
+          messageTag: `[<b>You</b> <i>whispered</i> <b>${username}</b>]`,
+           message: message, 
+           type: 'your-private-message'
+        });
         //send private message to user by id
-        socket.to(user.id).emit('private message', {messageTag: `${currentUser(socket.id).name} whispered`, message: message});
+        socket.to(user.id).emit('private message', {
+          messageTag: `[<b>${currentUser(socket.id).name}</b> <i>whispered</i>]`, 
+          message: message, 
+          type: 'private-message'
+        });
       }
       return;
     }
@@ -133,7 +143,7 @@ function executeCommand(socket, fullString){
 
   //get username from server
   } else if(command === '/whoami') {
-    socket.emit('server message', `You are ${currentUser(socket.id).name}.`);
+    socket.emit('server message', `You are <b>${currentUser(socket.id).name}.</b>`);
     return;
 
   //unable to match command

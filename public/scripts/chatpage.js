@@ -19,17 +19,31 @@ var user = {
     id: socket.id,
 }
 
-socket.emit('user created', user);
+//if username exists then user was created, else we need to create a random username
+if(username) {
+    socket.emit('user created', user);
+} else {
+    socket.emit('create random username', user);
+}
 
 //create event listener for sending message
 sendContainer.addEventListener('submit', function(e) {
     e.preventDefault(); //prevents page from refreshing after sending message
     if (message.value) {
-        if (message.value.slice(0,2) !== '[/') { //as long as message is not a command show your own message
-            receiveMessage(`You: ${message.value}`);
+        //if first char is '/' that means the command is invalid because it wasnt enclosed
+        if(message.value.charAt(0) === '/'){
+            receiveMessage('', 'Invalid command.', 'server-message');
+            message.value = ''; //empty out the message box
+            return;
         }
+
+        //as long as message is not a command show your own message
+        if (message.value.slice(0,2) !== '[/') { 
+            receiveMessage('You', message.value, 'your-message');
+        }
+
         socket.emit('chat message', message.value); //send message (as long as not empty) to the server to broadcast
-        message.value = ''; //empty out the message box
+        message.value = ''; 
     }
 });
 
@@ -47,34 +61,39 @@ message.addEventListener('keyup', (event) => {
 
 //event handling for other users sending messages
 socket.on('chat message', (messageData) => {
-    receiveMessage(`${messageData.messageTag}: ${messageData.message}`, 'public');
+    receiveMessage(messageData.messageTag, messageData.message, 'public-message');
 });
 
 //event handling for other users sending a private message
 socket.on('private message', (messageData) => {
-    receiveMessage(`${messageData.messageTag}: ${messageData.message}`, 'private');
+    receiveMessage('', `${messageData.messageTag}: ${messageData.message}`, messageData.type);
 });
 
 //event handling for server messages
 socket.on('server message', (message) => {
-    receiveMessage(message, 'server');
+    receiveMessage('', message, 'server-message');
 })
+
+//event handling for creating anonymous users
+socket.on('random username generated', (username) => {
+    user.name = username; 
+    socket.emit('user created', user); //user done creating
+});
 
 //event handling for other users connecting
 socket.on('user connected', (data) => {
     //receive message that some user connected as long as its not the current one
     if(data.user.name !== user.name) {
-        receiveMessage(`${data.user.name} has connected.`, 'server');
+        receiveMessage('', `${data.user.name} has connected.`, 'server-message');
     } else {
-        user = data.user; //set user with updated info in the case no username was created
-        receiveMessage('You joined.', 'server'); //show that you have connected to the chat
+        receiveMessage('', 'You joined.', 'server-message'); //show that you have connected to the chat
     }
     displayUsersOnline(data.usersConnected);
 });
 
 //event handling for other users disconnectiong
 socket.on('user disconnected', (data) => {
-    receiveMessage(`${data.user.name} has disconnected`, 'server');
+    receiveMessage('', `${data.user.name} has disconnected`, 'server-message');
     delete data.usersConnected[data.user.id]; //delete the user that disconnected from the list
     displayUsersOnline(data.usersConnected);
 });
@@ -85,10 +104,25 @@ socket.on('users typing', (users) => {
 });
 
 //helper function for creating and appending message
-function receiveMessage(message, type) {
+function receiveMessage(username, message, type) {
     var messageToReceive = document.createElement('li');
-    messageToReceive.setAttribute('id', type); // set id for styling of different messages
-    messageToReceive.textContent = message;
+    var usernameTag = document.createElement('p')
+    var messageText = document.createElement('p')
+
+    // set ids for stylings
+    messageToReceive.setAttribute('id', type); 
+    // if it is your message adjust the usernametag id for styling purposes
+    (type === 'your-message') ? usernameTag.setAttribute('id', 'your-tag') : usernameTag.setAttribute('id', 'username-tag');
+    messageText.setAttribute('id', 'message-text');
+
+    messageText.innerHTML = message;
+
+    if (username) { 
+        usernameTag.innerHTML = username;
+        messageToReceive.appendChild(usernameTag); 
+    }
+
+    messageToReceive.appendChild(messageText);
     messageList.appendChild(messageToReceive);
     window.scrollTo(0, document.body.scrollHeight);
 }
@@ -136,6 +170,12 @@ function displayUsersOnline(users) {
     for(let i = 0; i < userData.length; i++){
         let username = document.createElement('li');
         username.textContent = userData[i].name;
+
+        //Show where the current user is on the list
+        if(user.name === userData[i].name) {
+            username.textContent += ' (You)';
+        }
+
         usersOnline.appendChild(username);
     }
 }

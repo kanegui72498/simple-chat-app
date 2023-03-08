@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
-    <link rel="stylesheet" type="text/css" href="css/create-user.css" />
+    <title>Socket.IO Create Username</title>
+    <link rel="stylesheet" type="text/css" href="css/create-username.css" />
   </head>
   <body>
-    <div id="chat">
+    <div id="create-username-page">
+        <h1>Welcome To Socket IO Chat App!</h1>
+        <img src="/images/chat-image.png" alt="basic chat logo" id="chat-logo">
         <form id="username-form" method="post" action="/create-username">
-            <input id="username" name="username" autocomplete="off" /><button>Create Username<n/button>
+            <input id="username" name="username" autocomplete="off" autofocus /><button>Create Username<n/button>
         </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>

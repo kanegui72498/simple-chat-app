@@ -11,8 +11,6 @@ body {
     font-size: 14px;
     display: flex;
     flex-direction: column;
-    grid-gap: 6px;
-    gap: 6px;
     background-color: lightblue;
 }
 
@@ -86,6 +84,7 @@ body {
     list-style-type: none; 
     margin: 0; 
     padding: 0; 
+    font-weight: 600;
 }
 
 #users-online-list > li { 
@@ -96,17 +95,12 @@ body {
 #users-online-list > li:nth-child(odd) { background: aliceblue; }
 
 #message-list { 
+    display:flex;
+    flex-direction: column;
     list-style-type: none; 
     margin: 0; 
     padding: 0; 
 }
-
-#message-list > li { 
-    padding: 0.5rem 1rem;
-    word-break: break-all;
-}
-
-#message-list > li:nth-child(odd) { background: #efefef; }
 
 #chat-user-container {
     display: flex;
@@ -122,6 +116,9 @@ body {
     flex-direction: row;
     width: 100%;
     height: 5%;
+    font-family: serif;
+    font-size: 1.2rem;
+    font-weight: bold;
     justify-content: center;
 }
 
@@ -167,6 +164,70 @@ body {
     -moz-animation: fadeInAndOut 2s infinite linear;
     -o-animation: fadeInAndOut 2s infinite linear;
     -ms-animation: fadeInAndOut 2s infinite linear;
+}
+
+/* Styling for different types of messages */
+#message-list > li { 
+    display:flex;
+    flex-direction: column;
+    width: fit-content;
+    word-break: break-all;
+    max-width: 65%;
+}
+
+#your-message {
+    background-color: cornflowerblue;
+    margin-left: auto; 
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+#your-private-message {
+    background-color: plum;
+    margin-left: auto; 
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    color:purple;
+}
+
+#public-message {
+    background-color: #efefef;;
+    margin-right: auto;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+#private-message {
+    background-color: #CBC3E3;
+    margin-right: auto;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    color:purple;
+}
+
+#server-message {
+    background-color: white;
+    font-style: italic;
+}
+
+#username-tag {
+    margin:0;
+    background-color: white;
+    font-weight: bold;
+}
+
+#your-tag {
+    margin:0;
+    background-color: white;
+    text-align: right;
+    font-weight: bold;
+    color: black;
+}
+
+#message-text {
+    margin:0;
+    padding: 0.5rem 1rem;
 }
 
 /* creating fading animation for users typing */
