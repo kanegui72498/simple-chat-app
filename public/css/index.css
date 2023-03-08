@@ -31,7 +31,6 @@ button:hover {
 }
 
 #message-container {
-    height:50%;
     position:relative;
     display: flex;
     flex-direction: column;
@@ -41,9 +40,10 @@ button:hover {
     border-radius: 3px;
     border-color: #333;
     overflow-y: auto;
-    margin-bottom: 4em;
+    margin-bottom: 4rem;
     background-color: white;
 }
+
 
 
 #send-container { 
@@ -83,8 +83,16 @@ button:hover {
     position: relative;
     border: 2px solid black;
     border-left: 0px;
+}
+
+#users-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    position: relative;
     overflow-y: auto;
     background-color: white;
+    margin-bottom: 2rem;
 }
 
 #users-online-list {
