@@ -2,17 +2,17 @@
 <html>
   <head>
     <title>Socket.IO Create Username</title>
-    <link rel="stylesheet" type="text/css" href="css/create-username.css" />
+    <link rel="stylesheet" type="text/css" href="./public/css/create-username.css" />
   </head>
   <body>
     <div id="create-username-page">
         <h1>Welcome To Socket IO Chat App!</h1>
-        <img src="/images/chat-image.png" alt="basic chat logo" id="chat-logo">
+        <img src="./public/images/chat-image.png" alt="basic chat logo" id="chat-logo">
         <form id="username-form" method="post" action="/create-username">
             <input id="username" name="username" autocomplete="off" autofocus /><button>Create Username<n/button>
         </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="scripts/create-username.js" type="text/javascript"></script>
+    <script src="./public/scripts/create-username.js" type="text/javascript"></script>
   </body>
 </html>
